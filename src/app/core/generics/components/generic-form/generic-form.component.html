@@ -1,0 +1,39 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+  @for (field of data.formData; track field.key) {
+  <app-generic-form-ui [field]="field" [form]="form" />
+  }
+
+
+  @for (nested of data.nestedData; track nested.name ) {
+  @if(nested.value){
+  <div [formGroupName]="nested.name">{{nested.name}}
+    @for (field of nested.value; track field.key) {
+    <app-generic-form-ui [field]="field" [form]="nestedForm(nested.name)" />
+    }
+  </div>
+  }
+  }
+
+
+  @for (array of data.arrayData; track $index) {
+    @if (array.name && array.value) {
+      <div>{{ array.name }}</div>
+      <button (click)="addItem(array.name)">{{ array.addButtonText }}</button>
+
+      <div *ngIf="isFormArray(array.name)">
+        <div [formArrayName]="array.name">
+          <div *ngFor="let control of Array(array.name).controls; let i = index">
+            <div [formGroupName]="i">
+              <app-generic-form-ui *ngFor="let field of array.value" [field]="field" [form]="arrayForm(array.name , i)"></app-generic-form-ui>
+              <button (click)="removeItem(array.name , i)">{{ array.removeButtonText }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+
+  <button type="submit">ثبت</button>
+</form>
+

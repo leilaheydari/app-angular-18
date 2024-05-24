@@ -1,0 +1,100 @@
+<!-- generic-form-ui -->
+@if (form && field) {
+<div [formGroup]="form">
+  @switch (field.controlType) {
+  @case ('textbox') {
+  <div>
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>{{field.label}}</mat-label>
+      <input [formControlName]="field.key" [type]="field.type" matInput placeholder="Placeholder"
+        [required]="field.required">
+      <mat-icon matSuffix>{{field.icon}}</mat-icon>
+      <mat-hint>{{field.description}}</mat-hint>
+      <mat-error *ngIf="form.get(field.key)?.errors?.['required'] &&
+      (form.get(field.key)?.dirty || form.get(field.key)?.touched)">
+        {{ field.errorMessage }}
+      </mat-error>
+      <mat-error *ngIf="form.get(field.key)?.errors?.['pattern'] &&
+      (form.get(field.key)?.dirty || form.get(field.key)?.touched)">
+        {{ field.errorMessagePattern }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  }
+  @case ('checkbox') {
+  <div>
+    <label>{{field.label}}</label>
+    <div formArrayName="{{field.key}}">
+      <ng-container *ngFor="let option of field.options; let i = index">
+        <mat-checkbox [formControlName]="i">{{option.value}}</mat-checkbox>
+      </ng-container>
+    </div>
+  </div>
+  }
+  @case ('radio') {
+  <div>
+    <label>{{field.label}}</label>
+    <div>
+      <mat-radio-group aria-label="Select an option" [formControlName]="field.key">
+        @for (option of field.options; track option.key) {
+        <mat-radio-button [value]="option.key"> {{option.value}}</mat-radio-button>
+        }
+      </mat-radio-group>
+    </div>
+  </div>
+  }
+
+
+  @case ('dropdown') {
+  @switch (field.selectType) {
+  @case ('basicSelection') {
+  <mat-form-field appearance="outline" class="example-full-width">
+    <mat-label>{{field.label}}</mat-label>
+    <mat-select [formControlName]="field.key">
+      @for (option of field.options; track option.key) {
+      <mat-option [value]="option.key">{{option.value}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  }
+  @case ('nestedSelection') {
+  <mat-form-field appearance="outline" class="example-full-width">
+    <mat-label>{{field.label}}</mat-label>
+    <mat-select [formControlName]="field.key">
+      @for (group of field.nestedOption; track group) {
+      <mat-optgroup style="font-weight: bold;" [label]="group.name">
+        @for (option of group.nested; track option.key) {
+        <mat-option [value]="option.key">{{option.value}}</mat-option>
+        }
+      </mat-optgroup>
+      }
+    </mat-select>
+  </mat-form-field>
+  }
+  @case ('multipleSelection') {
+  <mat-form-field appearance="outline" class="example-full-width">
+    <mat-label>{{field.label}}</mat-label>
+    <mat-select [formControlName]="field.key" multiple>
+      @for (option of field.options; track option.key) {
+      <mat-option [value]="option.key">{{option.value}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  }
+  }
+  }
+
+  @case ('datepicker') {
+  @switch (field.language) {
+  @case ('en') {
+    
+  }
+  @case ('fa') {
+ 
+  }
+  }
+  }
+
+  }
+</div>
+}

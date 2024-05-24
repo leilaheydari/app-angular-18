@@ -1,1 +1,5 @@
-<p>login works!</p>
+@defer  {
+  <div class="box">
+    <app-generic-form [data]="data"  (value)="submit($event)" />
+  </div>
+}
